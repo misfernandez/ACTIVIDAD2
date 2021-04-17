@@ -1,0 +1,70 @@
+---
+title: "ACTIVIDAD2"
+output: github_document
+---
+## INICIO DE LAS BIBLIOTECAS
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+library(datasets)
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(quanteda)
+library(ggplot2)
+library(utf8)
+
+```
+
+## ABRIR EL ARCHIVO PRIMER TIEMPO
+```{r}
+Primer_tiempo2020 <- read_csv("/Users/misaelfernandez/Desktop/Universidad/Mineria/ayudantia 1/Ayudantia_DataMining01_2021/Ayudantia 2/Primer_Tiempo2020.csv")
+view(Primer_tiempo2020)
+
+```
+```{r}
+
+summary(Primer_tiempo2020)
+attach(Primer_tiempo2020)
+
+```
+##BORRAR DATOS MALOS
+```{r}
+Primer_tiempo2020 <-Primer_tiempo2020[,!(colnames(Primer_tiempo2020) %in% c("id_partido","fasepartido","local","tiempo","formationUsed","torneo"))]
+Primer_tiempo2020
+
+```
+
+
+##CREAR DATA FRAME
+```{r}
+ff20<- Primer_tiempo2020[order(Primer_tiempo2020$accuratePass, decreasing = TRUE),]
+
+ff20_pases =ff20 [, colnames(Primer_tiempo2020)%in% c("equipo", "partido", "accuratePass", "totalPass", "precision_pases")]
+ff20_pases = ff20_pases[order(ff20_pases$precision_pases, decreasing = TRUE),]
+
+ff20_pases
+```
+##FILTRAR LOS DATOS
+
+```{r}
+palestino <- filter(Primer_tiempo2020, equipo == "Palestino")
+palestino_pases <- filter(ff20_pases, equipo == "Palestino")
+palestino_pases
+
+```
+
+
+#PARA ANALIZAR
+```{r}
+final = as.data.frame(palestino_pases)
+attach(final)
+palestino_pases <- final$accuratePass
+final2 <- palestino[order(accuratePass, decreasing = FALSE),]
+
+dotchart(totalPass, labels = utf8_encode(partido), cex=0.5, xlab = "Pases", ylab = "Partido")
+
+```
+
